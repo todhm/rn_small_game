@@ -33,39 +33,54 @@ export default class Start extends React.Component {
     await configureTransition(()=>{
       this.setState({transitionState:State.WillTransitionIn})
     })
+    Animated.timing(this.toggleOpacity,{
+      toValue:1, 
+      duration:500, 
+      delay:500,
+      useNativeDriver:true, 
+    }).start(); 
 
-
+    Animated.timing(this.buttonOpacity,{
+      toValue:1, 
+      duration:500, 
+      delay:1000,
+      useNativeDriver:true,
+    }).start();
   }
 
   state = {
     transitionState: State.Launching,
   };
+  toggleOpacity = new Animated.Value(0);
+  buttonOpacity = new Animated.Value(0);
 
   render() {
     const {size,onChangeSize} = this.props; 
     const {transitionState} = this.state; 
+
+    const toggleStyle = {opacity:this.toggleOpacity};
+    const buttonStyle = {opacity:this.buttonOpacity};
     return (
       <View style={styles.container}>
         <View style={styles.logo}>
           <Logo/>
         </View>
         {transitionState !== State.Launching&&(
-          <View>
+          <Animated.View style={toggleStyle}>
           <Toggle
             options={BOARD_SIZES}
             value={size}
             onChange={onChangeSize}
           />
-        </View>
+        </Animated.View>
         )}
         {transitionState !== State.Launching&&(
-          <View>
-            <View>
+         
+            <Animated.View style={buttonStyle}>
               <Button title={'Start Game'}
                 onPress={()=>{}}
               />
-            </View>
-        </View>
+            </Animated.View>
         )}
       </View>
     )
